@@ -6,7 +6,7 @@
 #    By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/06 11:29:34 by lmedrano          #+#    #+#              #
-#    Updated: 2023/07/06 14:58:03 by lmedrano         ###   ########.fr        #
+#    Updated: 2023/07/11 18:10:21 by lmedrano         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,47 +15,59 @@ ORANGE 		= \033[38;5;215m
 GREEN 		= \033[38;5;82m
 RESET 		= \033[0m
 
-SRCS1 		= server.c
+SRCS 		= server.c client.c
 
-SRCS2 		= client.c
+OBJS 		= ${SRCS:.c=.o}
 
-OBJS1 		= ${SRCS1:.c=.o}
-
-OBJS2 		= ${SRCS2:.c=.o}
-
-prog01		= server
-
-prog02		= client
+NAME		= minitalk
 
 CC 		= gcc
 
-CFLAGS		= -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS		= -Wall -Werror -Wextra -Ilibft -Iprintf
 
 RM		= rm -rf
 
-${prog01}:	${OBJS1}
-			@echo "$(RESET)$(ORANGE)ASSEMBLING $(prog01)$(RESET)"
-			${CC} ${CFLAGS} ${OBJS1} -o ${prog01}
-			@echo "$(RESET)$(GREEN)$(prog01) HAS ASSEMBLED ✓$(RESET)"
+$(NAME):	server client
 
-${prog02}:	${OBJS2}
-			@echo "$(RESET)$(ORANGE)ASSEMBLING $(prog02)$(RESET)"
-			${CC} ${CFLAGS} ${OBJS2} -o ${prog02}
-			@echo "$(RESET)$(GREEN)$(prog02) HAS ASSEMBLED ✓$(RESET)"
+server:		server.o
+		@echo "$(RESET)$(ORANGE)ASSEMBLING -SERVER-$(RESET)"
+		make -C libft
+		make -C printf
+		${CC} ${CFLAGS} $? -Llibft -lft -Lprintf -lftprintf -o server
+		@echo "$(RESET)$(GREEN)-SERVER- HAS ASSEMBLED ✓$(RESET)"
 
-all:		$(prog01) $(prog02)
+client:		client.o
+		@echo "$(RESET)$(ORANGE)ASSEMBLING -CLIENT-$(RESET)"
+		make -C libft
+		make -C printf
+		${CC} ${CFLAGS} $? -Llibft -lft -Lprintf -lftprintf -o client
+		@echo "$(RESET)$(GREEN)-CLIENT- HAS ASSEMBLED ✓$(RESET)"
+
+		
+libft:		@echo "$(RESET)$(ORANGE)ASSEMBLING -LIBFT-$(RESET)"
+		make -C libft
+		@echo "$(RESET)$(GREEN)-LIBFT- HAS ASSEMBLED ✓$(RESET)"
+
+printf:		@echo "$(RESET)$(ORANGE)ASSEMBLING -PRINTF-$(RESET)"
+		make -C printf
+		@echo "$(RESET)$(GREEN)-PRINTF- HAS ASSEMBLED ✓$(RESET)"
+
+
+all:		$(NAME)
 
 
 clean:		
 			@echo "$(RESET)$(ORANGE)I'M CLEANING OUT MY CLOSET...$(RESET)"
+			make clean -C libft
+			make clean -C printf
+			$(RM) $(OBJS)
 			@echo "$(RESET)$(GREEN)CLEANED ✓$(RESET)"
 
 fclean:		clean
 			@echo "$(RESET)$(ORANGE)ONE MORE TIME...$(RESET)"
-			${RM} ${OBJS1} ${prog01}
-			${RM} ${OBJS2} ${prog02}
+			$(RM) server client
 			@echo "$(RESET)$(GREEN)ALL CLEANED ✓✓$(RESET)"
 
 re:			fclean all
 
-.PHONY:		all test clean fclean re
+.PHONY:		all libft printf clean fclean re
