@@ -6,7 +6,7 @@
 #    By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/06 11:29:34 by lmedrano          #+#    #+#              #
-#    Updated: 2023/07/11 18:10:21 by lmedrano         ###   ########.fr        #
+#    Updated: 2023/07/13 15:37:20 by lmedrano         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,15 +31,11 @@ $(NAME):	server client
 
 server:		server.o
 		@echo "$(RESET)$(ORANGE)ASSEMBLING -SERVER-$(RESET)"
-		make -C libft
-		make -C printf
 		${CC} ${CFLAGS} $? -Llibft -lft -Lprintf -lftprintf -o server
 		@echo "$(RESET)$(GREEN)-SERVER- HAS ASSEMBLED ✓$(RESET)"
 
 client:		client.o
 		@echo "$(RESET)$(ORANGE)ASSEMBLING -CLIENT-$(RESET)"
-		make -C libft
-		make -C printf
 		${CC} ${CFLAGS} $? -Llibft -lft -Lprintf -lftprintf -o client
 		@echo "$(RESET)$(GREEN)-CLIENT- HAS ASSEMBLED ✓$(RESET)"
 
