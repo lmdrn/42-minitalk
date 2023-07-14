@@ -6,49 +6,91 @@
 /*   By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 09:40:42 by lmedrano          #+#    #+#             */
-/*   Updated: 2023/07/11 20:25:45 by lmedrano         ###   ########.fr       */
+/*   Updated: 2023/07/14 08:31:27 by lmedrano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/* byte = 0^7 + 2^6 + 0^5 + 0^4 + 2^3 + 0^2 + 0^1 + 0^0; */
+char	*append_letter(char const *s1, char const letter)
+{
+	int		i;
+	int		j;
+	char	*str;
+
+	i = 0;
+	j = 0;
+	str = malloc((ft_strlen(s1) + 2) * sizeof(char));
+	if (!str)
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		str[j] = s1[i];
+		i++;
+		j++;
+	}
+	str[j + 1] = letter;
+	str[j] = 0;
+	free((void *)(s1));
+	return (str);
+}
+
+int	ft_recursive_power(int nb, int power)
+{
+	if (power < 0)
+		return (0);
+	if (power == 0)
+		return (1);
+	if (power > 1)
+	{
+		nb = nb * ft_recursive_power(nb, power - 1);
+	}
+	return (nb);
+}	
+
 void	signal_handler(int signal)
 {
-	static int	byte;
+	static int	bit;
 	static int	index;
+	static char	*final_byte;
 
 	index = 0;
-	byte = 0;
-	printf("signal : %d\n", signal);
 	if (signal == SIGUSR1)
 	{
-		byte = byte + (0 * index);
-		ft_printf("it's a zero!\n");
+		bit = bit + 0;
+		ft_printf("couocn1");
 	}
 	else if (signal == SIGUSR2)
 	{
-		ft_printf("it's a one!\n");
-		byte = byte + (2 * index);
+		bit = bit + (1 * ft_recursive_power(2, index));
+		ft_printf("couocn2");
 	}
-	else if (signal == SIGINT)
+	if (signal == SIGINT)
 	{
 		ft_printf("Exiting Server...\n");
 		exit(0);
 	}
-	index++;
 	if (index == 8)
 	{
-		ft_putchar_fd((char)byte, 1);
+		ft_printf("couocn3");
+		final_byte = append_letter(final_byte, bit);
+		if (bit == '\0')
+		{
+			ft_printf("couocn4");
+			ft_printf("%s\n", final_byte);
+			final_byte = 0;
+			ft_printf("couocn5");
+		}
+		index = 0;
+		bit = 0;
 	}
-	index = 0;
 }
 
 void	set_signal_action(void)
 {
 	struct sigaction	act;
 
-	bzero(&act, sizeof(act));
+	act.sa_flags = SA_SIGINFO;
 	act.sa_handler = &signal_handler;
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGUSR1, &act, NULL);
@@ -61,12 +103,10 @@ int	main(void)
 
 	server_pid = getpid();
 	ft_printf("Hello! Welcome to Lea's server\n");
-	sleep(1);
 	ft_printf("Launching server...\n");
 	sleep(1);
 	printf("Server launched!\n");
 	set_signal_action();
-	sleep(1);
 	ft_printf("Server's PID is : %d\n", server_pid);
 	while (1)
 		pause();
