@@ -6,7 +6,7 @@
 /*   By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 14:47:16 by lmedrano          #+#    #+#             */
-/*   Updated: 2023/07/11 20:25:45 by lmedrano         ###   ########.fr       */
+/*   Updated: 2023/07/17 13:50:58 by lmedrano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	encrypt_and_send(int pid, char *sentence)
 {
 	int		index;
 	int		letter;
-	int		bit;
 
 	letter = 0;
 	while (sentence[letter] != '\0')
@@ -24,15 +23,10 @@ void	encrypt_and_send(int pid, char *sentence)
 		index = 0;
 		while (index < 8)
 		{
-			bit = (int)sentence[letter] >> index;
-			if ((bit & 1) == 0)
-			{
+			if ((int)sentence[letter] & (1 << index))
 				kill(pid, SIGUSR1);
-			}
 			else
-			{
 				kill(pid, SIGUSR2);
-			}
 			usleep(1000);
 			index++;
 		}
