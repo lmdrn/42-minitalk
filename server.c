@@ -6,16 +6,11 @@
 /*   By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 09:40:42 by lmedrano          #+#    #+#             */
-/*   Updated: 2023/07/17 13:51:12 by lmedrano         ###   ########.fr       */
+/*   Updated: 2023/07/20 10:02:25 by lmedrano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
 
 void	signal_handler(int signal)
 {
@@ -33,8 +28,8 @@ void	signal_handler(int signal)
 	if (index == 8)
 	{
 		ft_putchar(bit);
-		bit = 0;
 		index = 0;
+		bit = 0;
 	}
 }
 
@@ -42,7 +37,6 @@ void	set_signal_action(void)
 {
 	struct sigaction	act;
 
-	act.sa_flags = SA_SIGINFO;
 	act.sa_handler = &signal_handler;
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGUSR1, &act, NULL);
@@ -59,7 +53,6 @@ int	main(void)
 	sleep(1);
 	printf("Server launched!\n");
 	set_signal_action();
-	ft_putchar('\n');
 	ft_printf("Server's PID is : %d\n", server_pid);
 	while (1)
 		pause();

@@ -6,7 +6,7 @@
 #    By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/07/06 11:29:34 by lmedrano          #+#    #+#              #
-#    Updated: 2023/07/13 15:37:20 by lmedrano         ###   ########.fr        #
+#    Updated: 2023/07/20 09:40:39 by lmedrano         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,55 +15,52 @@ ORANGE 		= \033[38;5;215m
 GREEN 		= \033[38;5;82m
 RESET 		= \033[0m
 
-SRCS 		= server.c client.c
+CLIENT			= client
 
-OBJS 		= ${SRCS:.c=.o}
+SERVER			= server
 
-NAME		= minitalk
+SERVER_SRCS 		= server.c \
+			  utils.c
+
+CLIENT_SRCS 		= client.c \
+			  utils.c
+
+CLIENT_OBJS 		= ${CLIENT_SRCS:.c=.o}
+
+SERVER_OBJS 		= ${SERVER_SRCS:.c=.o}
 
 CC 		= gcc
 
-CFLAGS		= -Wall -Werror -Wextra -Ilibft -Iprintf
+CFLAGS		= -Wall -Werror -Wextra
 
 RM		= rm -rf
 
-$(NAME):	server client
 
-server:		server.o
+$(SERVER):	$(SERVER_OBJS)
+		make -C ft_printf
 		@echo "$(RESET)$(ORANGE)ASSEMBLING -SERVER-$(RESET)"
-		${CC} ${CFLAGS} $? -Llibft -lft -Lprintf -lftprintf -o server
+		${CC} ${CFLAGS} $(SERVER_OBJS) ft_printf/ft_printf.a -o $(SERVER)
 		@echo "$(RESET)$(GREEN)-SERVER- HAS ASSEMBLED ✓$(RESET)"
 
-client:		client.o
+$(CLIENT):	$(CLIENT_OBJS)
+		make -C ft_printf
 		@echo "$(RESET)$(ORANGE)ASSEMBLING -CLIENT-$(RESET)"
-		${CC} ${CFLAGS} $? -Llibft -lft -Lprintf -lftprintf -o client
+		${CC} ${CFLAGS} $(CLIENT_OBJS) ft_printf/ft_printf.a -o $(CLIENT)
 		@echo "$(RESET)$(GREEN)-CLIENT- HAS ASSEMBLED ✓$(RESET)"
 
-		
-libft:		@echo "$(RESET)$(ORANGE)ASSEMBLING -LIBFT-$(RESET)"
-		make -C libft
-		@echo "$(RESET)$(GREEN)-LIBFT- HAS ASSEMBLED ✓$(RESET)"
+all:		$(SERVER) $(CLIENT)
 
-printf:		@echo "$(RESET)$(ORANGE)ASSEMBLING -PRINTF-$(RESET)"
-		make -C printf
-		@echo "$(RESET)$(GREEN)-PRINTF- HAS ASSEMBLED ✓$(RESET)"
-
-
-all:		$(NAME)
-
-
-clean:		
+clean:
 			@echo "$(RESET)$(ORANGE)I'M CLEANING OUT MY CLOSET...$(RESET)"
-			make clean -C libft
-			make clean -C printf
-			$(RM) $(OBJS)
+			make clean -C ft_printf
+			$(RM) $(CLIENT_OBJS) $(SERVER_OBJS)
 			@echo "$(RESET)$(GREEN)CLEANED ✓$(RESET)"
 
 fclean:		clean
 			@echo "$(RESET)$(ORANGE)ONE MORE TIME...$(RESET)"
-			$(RM) server client
+			$(RM) $(CLIENT) $(SERVER)
 			@echo "$(RESET)$(GREEN)ALL CLEANED ✓✓$(RESET)"
 
 re:			fclean all
 
-.PHONY:		all libft printf clean fclean re
+.PHONY:		all clean fclean re

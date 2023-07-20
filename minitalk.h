@@ -6,7 +6,7 @@
 /*   By: lmedrano <lmedrano@student.42lausanne.ch>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/10 09:41:32 by lmedrano          #+#    #+#             */
-/*   Updated: 2023/07/11 18:05:36 by lmedrano         ###   ########.fr       */
+/*   Updated: 2023/07/20 08:59:26 by lmedrano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,16 @@
 
 # include <signal.h>
 # include <unistd.h>
-# include "libft/libft.h"
-# include "printf/ft_printf.h"
+# include "ft_printf/ft_printf.h"
 
 /* -------- PROTOTYPES DE FUNCTIONS -------- */
 
 /* -- ARGS -- */
 void	no_inputs(void);
-void	no_texts(void);
-void	no_pid(void);
+
+/* -- UTILS -- */
+void	ft_putchar(char c);
+int		ft_isspace(char c);
+int		ft_atoi(const char *str);
 
 #endif
